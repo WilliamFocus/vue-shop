@@ -81,7 +81,7 @@ export default {
     // 退出登录
     logout() {
       window.sessionStorage.clear()
-      this.$router.push('./login')
+      this.$router.push('/login')
     },
     // 请求获取菜单导航
     async getMenuList() {
