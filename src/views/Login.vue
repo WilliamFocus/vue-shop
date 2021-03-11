@@ -2,11 +2,14 @@
   <div class="login_container">
     <div class="box">
       <!-- 头像 -->
-      <div class="avatar_box">
-        <img src="../assets/logo.png" alt="" />
-      </div>
+      <div class="avatar_box"><img src="../assets/logo.png" alt="" /></div>
       <!-- 表单 -->
-      <el-form class="login_form" :model="loginForm" :rules="loginFormRules" ref="loginFormRef">
+      <el-form
+        class="login_form"
+        :model="loginForm"
+        :rules="loginFormRules"
+        ref="loginFormRef"
+      >
         <!-- 账号 -->
         <el-form-item prop="username">
           <el-input
@@ -34,7 +37,7 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
       loginForm: {
         username: 'admin',
@@ -53,10 +56,10 @@ export default {
     }
   },
   methods: {
-    resetLoginForm () {
+    resetLoginForm() {
       this.$refs.loginFormRef.resetFields()
     },
-    login () {
+    login() {
       this.$refs.loginFormRef.validate(async b => {
         if (!b) return
         const { data: res } = await this.$http.post('login', this.loginForm)

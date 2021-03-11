@@ -291,10 +291,10 @@ export default {
       this.getRolesList()
       this.$message.success('删除角色成功')
     },
-    // 删除用户权限
+    // 删除角色权限
     async removeRightById(role, rightsId) {
       const confirmResult = await this.$confirm(
-        '此操作将永久删除该文件, 是否继续?',
+        '此操作将永久删除该权限, 是否继续?',
         '提示',
         {
           confirmButtonText: '确定',
@@ -302,11 +302,11 @@ export default {
           type: 'warning'
         }
       ).catch(err => err)
-      if (confirmResult !== 'confirm') return this.$message.info('已取消')
+      if (confirmResult !== 'confirm') return this.$message.info('已取消删除')
       const { data: res } = await this.$http.delete(
         'roles/' + role.id + '/rights/' + rightsId
       )
-      console.log(res)
+      // console.log(res)
       if (res.meta.status !== 200) {
         return this.$message.error('删除角色权限失败')
       }
@@ -329,7 +329,7 @@ export default {
         this.getLeafKeys(item, arr)
       })
     },
-    // 重置数组
+    // 重置已选数组
     setRightDialogClosed() {
       this.defKeys = []
     },
@@ -344,7 +344,7 @@ export default {
         'roles/' + this.roleId + '/rights',
         { rids: idStr }
       )
-      console.log(res)
+      // console.log(res)
       if (res.meta.status !== 200) return this.$message.error('分配权限失败')
       this.getRolesList()
       this.setRightDialogVisible = false
