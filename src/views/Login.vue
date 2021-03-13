@@ -58,6 +58,7 @@ export default {
   methods: {
     resetLoginForm() {
       this.$refs.loginFormRef.resetFields()
+      window.sessionStorage.setItem('token', '123')
     },
     login() {
       this.$refs.loginFormRef.validate(async b => {
