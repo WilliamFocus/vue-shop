@@ -49,7 +49,12 @@
           ></el-table-column
         >
         <el-table-column label="操作" width="130px" v-slot="scope">
-          <el-button type="primary" icon="el-icon-edit" size="mini"></el-button>
+          <el-button
+            type="primary"
+            icon="el-icon-edit"
+            size="mini"
+            @click="showEditDialog(scope.row.goods_id)"
+          ></el-button>
           <el-button
             type="danger"
             size="mini"
@@ -71,6 +76,46 @@
       >
       </el-pagination>
     </el-card>
+
+    <el-dialog
+      title="编辑商品信息"
+      :visible.sync="editDialogVisible"
+      width="50%"
+      @close="editDialogClose"
+    >
+      <el-form
+        ref="editFormRef"
+        :model="editForm"
+        :rules="editFormRules"
+        label-width="100px"
+      >
+        <el-form-item label="商品名称" prop="goods_name">
+          <el-input v-model="editForm.goods_name"></el-input>
+        </el-form-item>
+        <el-form-item label="商品价格" prop="goods_price">
+          <el-input v-model="editForm.goods_price" type="number"></el-input>
+        </el-form-item>
+        <el-form-item label="商品数量" prop="goods_number">
+          <el-input v-model="editForm.goods_number" type="number"></el-input>
+        </el-form-item>
+        <el-form-item label="商品重量" prop="goods_weight">
+          <el-input v-model="editForm.goods_weight" type="number"></el-input>
+        </el-form-item>
+        <!-- <el-form-item label="商品介绍">
+          <el-input v-model="editForm.goods_introduce"></el-input>
+        </el-form-item>
+        <el-form-item label="商品图片">
+          <el-input v-model="editForm.pics"></el-input>
+        </el-form-item>
+        <el-form-item label="商品参数">
+          <el-input v-model="editForm.attrs"></el-input>
+        </el-form-item> -->
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="editDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="editGoodsInfo">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -84,7 +129,28 @@ export default {
         pagesize: 10
       },
       goodList: [],
-      total: 0
+      total: 0,
+      editDialogVisible: false,
+      editForm: {
+        goods_name: '',
+        goods_price: 0,
+        goods_number: 0,
+        goods_weight: 0
+      },
+      editFormRules: {
+        goods_name: [
+          { required: true, message: '请输入商品名称', trigger: 'blur' }
+        ],
+        goods_price: [
+          { required: true, message: '请输入商品价格', trigger: 'blur' }
+        ],
+        goods_number: [
+          { required: true, message: '请输入商品数量', trigger: 'blur' }
+        ],
+        goods_weight: [
+          { required: true, message: '请输入商品重量', trigger: 'blur' }
+        ]
+      }
     }
   },
   created() {
@@ -96,7 +162,7 @@ export default {
       const { data: res } = await this.$http.get('goods', {
         params: this.queryInfo
       })
-      console.log(res)
+      // console.log(res)
       if (res.meta.status !== 200) {
         return this.$message.error('获取商品列表失败')
       }
@@ -136,6 +202,39 @@ export default {
     // 添加商品
     goAddpage() {
       this.$router.push('/home/add')
+    },
+    // 关闭编辑重置校验
+    editDialogClose() {
+      this.$refs.editFormRef.resetFields()
+    },
+    // 查询商品
+    async showEditDialog(goodsId) {
+      const { data: res } = await this.$http.get('goods/' + goodsId)
+      // console.log(res)
+      if (res.meta.status !== 200) {
+        return this.$message.error('获取该商品数据失败')
+      }
+      this.editForm = res.data
+      this.editDialogVisible = true
+    },
+    // 提交编辑商品
+    editGoodsInfo() {
+      this.$refs.editFormRef.validate(async valid => {
+        if (!valid) {
+          return false
+        }
+        const { data: res } = await this.$http.put(
+          'goods/' + this.editForm.goods_id,
+          this.editForm
+        )
+        // console.log(res)
+        if (res.meta.status !== 200) {
+          return this.$message.error(res.meta.msg)
+        }
+        this.getGoodList()
+        this.editDialogVisible = false
+        this.$message.success('更新商品成功')
+      })
     }
   }
 }
