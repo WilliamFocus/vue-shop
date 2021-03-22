@@ -9,8 +9,18 @@
     <el-card>
       <el-row>
         <el-col :span="8">
-          <el-input placeholder="请输入内容" v-model="queryInfo.query">
-            <el-button slot="append" icon="el-icon-search"></el-button>
+          <el-input
+            placeholder="请输入内容"
+            v-model="queryInfo.query"
+            clearable
+            @clear="getOrderList"
+            @change="getOrderList"
+          >
+            <el-button
+              slot="append"
+              icon="el-icon-search"
+              @click="getOrderList"
+            ></el-button>
           </el-input>
         </el-col>
       </el-row>
@@ -256,7 +266,7 @@ export default {
     },
     // 进度查询
     async showProgressBox() {
-      // API错误
+      // API接口错误
       // const { data: res } = await this.$http.get('/kuaidi/1106975712662')
       // console.log(res)
       // if (res.meta.statue !== 200) {
