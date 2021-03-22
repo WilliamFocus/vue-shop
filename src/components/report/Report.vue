@@ -57,11 +57,12 @@ export default {
     var myChart = echarts.init(document.getElementById('main'))
 
     // 获取指定图表的配置项和数据
+    myChart.showLoading()
     const { data: res } = await this.$http.get('reports/type/1')
     if (res.meta.status !== 200) {
       return this.message.error('请求图表数据失败')
     }
-
+    myChart.hideLoading()
     // 准备option选项
     const result = _.merge(res.data, this.options)
 
