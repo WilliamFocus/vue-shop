@@ -49,9 +49,8 @@
                       type="warning"
                       closable
                       @close="removeRightById(scope.row, item3.id)"
-                      v-for="(item3, index3) in item2.children"
+                      v-for="item3 in item2.children"
                       :key="item3.id"
-                      :class="[index3 === 0 ? '' : 'bdtop']"
                       >{{ item3.authName }}</el-tag
                     >
                   </el-col>
